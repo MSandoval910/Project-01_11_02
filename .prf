@@ -1,0 +1,21 @@
+{
+	"connectingName": "",
+	"method": "sftp",
+	"host": "10.106.15.128",
+	"port": "22",
+	"username": "root ",
+	"rsaPath": "",
+	"password": "vowel-speak-40",
+	"serverPath": "/var/www/Projects/Project 01_11_02/",
+	"save": true,
+	"siteUrl": "",
+	"method_p": "ftp",
+	"host_p": "",
+	"port_p": "21",
+	"username_p": "",
+	"rsaPath_p": "",
+	"password_p": "",
+	"serverPath_p": "",
+	"siteUrl_p": "",
+	"prfver": "1.1"
+}
