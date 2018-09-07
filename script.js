@@ -9,7 +9,7 @@
 "use strict";
 // global variables
 var httpRequest = false;
-var entry = "^IXIC";
+var entry = "MSFT";
 
 // function for getRequestObject()
 function getRequestObject() {
@@ -18,7 +18,7 @@ function getRequestObject() {
     } catch (requestError) {
         return false;
     }
-//    alert(httpRequest);
+    //    alert(httpRequest);
     return httpRequest;
 }
 // function to stop the default submission from executing
@@ -33,9 +33,11 @@ function stopSubmission(evt) {
 }
 // function that will request stock quote data from the server 
 function getQuote() {
-   console.log("getQuote()");
     if (document.getElementsByTagName("input")[0].value) {
         entry = document.getElementsByTagName("input")[0].value;
+    } else {
+        document.getElementsByTagName("input")[0].value = entry;
+
     }
     if (!httpRequest) {
         httpRequest = getRequestObject();
@@ -50,31 +52,28 @@ function getQuote() {
 }
 
 // function to display the data
-function displayData(){
-    if(httpRequest.readyState === 4 && httpRequest.status === 200){
-       var stockResults = httpRequest.responseText;
-        var stockItems = stockResults.split(/,|\"/);
-        for(var i = stockItems.length - 1; i >= 0; i--){
-            if(stockItems[i] === ""){
-                stockItems.splice(i,1);
-            }
-        }
+function displayData() {
+    if (httpRequest.readyState === 4 && httpRequest.status === 200) {
+        var stockResults = httpRequest.responseText;
+        var stockItems = JSON.parse(stockResults);
         // code to place data into the page in the DOM
-        document.getElementById("ticker").innerHTML = stockItems[0];
-        document.getElementById("openingPrice").innerHTML = stockItems[6];
-        document.getElementById("lastTrade").innerHTML = stockItems[1];
-        document.getElementById("lastTradeDT").innerHTML = stockItems[2] + ", " + stockItems[3];
-        document.getElementById("change").innerHTML = stockItems[4];
-        document.getElementById("range").innerHTML = (stockItems[8] * 1).toFixed(2) + "&ndash;" + (stockItems[7] * 1).toFixed(2);
-        document.getElementById("volume").innerHTML = (stockItems[9] * 1).toLocaleString();
-        
+        console.log(stockItems);
+          document.getElementById("ticker").innerHTML = stockItems.symbol;
+      document.getElementById("openingPrice").innerHTML = stockItems.open;
+       document.getElementById("lastTrade").innerHTML = stockItems.latestPrice;
+        var date = new Date(stockItems.latestUpdate);
+      document.getElementById("lastTradeDT").innerHTML = date.toDateString() + "<br>" + date.toLocaleString();
+      document.getElementById("change").innerHTML = (stockItems.latestPrice - stockItems.open).toFixed(2);
+        document.getElementById("range").innerHTML = "low " + (stockItems.low * 1).toFixed(2) + "<br>High " + (stockItems.high * 1).toFixed(2);
+        document.getElementById("volume").innerHTML = (stockItems.latestVolume * 1).toLocaleString();
+
         //console.log(stockItems);
     }
 }
 // function to get a little better style into the stock data
 function formatTable() {
     var rows = document.getElementsByTagName("tr");
-    for(var i = 0; i < rows.length; i++) {
+    for (var i = 0; i < rows.length; i = i + 2) {
         rows[i].style.background = "#9FE098";
     }
 }
